@@ -1,6 +1,7 @@
 #  ---------------------------------------------------------------------------
 #
 #  Description:  This file holds all my BASH configurations and aliases
+#  bash_profile store in /.bash_profile  (MAC)
 #
 #  Sections:
 #  1.  Environment Configuration

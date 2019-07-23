@@ -86,6 +86,8 @@ map <C-F7> :set listchars+=space:.<CR>:windo set invlist<CR>
 
 filetype indent on
 "highlight LineNr ctermfg=darkgrey
+"The color scheme is in ~/.vim/color folder 
+
 colorscheme monokai 
 
 

@@ -1,96 +1,114 @@
-" Don't try to be vi compatible
-set nocompatible
+" All system-wide defaults are set in $VIMRUNTIME/debian.vim (usually just
+" /usr/share/vim/vimcurrent/debian.vim) and sourced by the call to :runtime
+" you can find below.  If you wish to change any of those settings, you should
+" do it in this file (/etc/vim/vimrc), since debian.vim will be overwritten
+" everytime an upgrade of the vim packages is performed.  It is recommended to
+" make changes after sourcing debian.vim since it alters the value of the
+" 'compatible' option.
 
-" Helps force plugins to load correctly when it is turned back on below
-filetype off
+" This line should not be removed as it ensures that various options are
+" properly set to work with the Vim-related packages available in Debian.
+runtime! debian.vim
 
-" TODO: Load plugins here (pathogen or vundle)
+" Uncomment the next line to make Vim more Vi-compatible
+" NOTE: debian.vim sets 'nocompatible'.  Setting 'compatible' changes numerous
+" options, so any other options should be set AFTER setting 'compatible'.
+"set compatible
 
-" Turn on syntax highlighting
+" Vim5 and later versions support syntax highlighting. Uncommenting the next
+" line enables syntax highlighting by default.
+if has("syntax")
+  syntax on
+endif
+
+" If using a dark background within the editing area and syntax highlighting
+" turn on this option as well
+"set background=dark
+
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+"if has("autocmd")
+"  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+"endif
+
+" Uncomment the following to have Vim load indentation rules and plugins
+" according to the detected filetype.
+"if has("autocmd")
+"  filetype plugin indent on
+"endif
+
+" The following are commented out as they cause vim to behave a lot
+" differently from regular Vi. They are highly recommended though.
+"set showcmd		" Show (partial) command in status line.
+"set showmatch		" Show matching brackets.
+"set ignorecase		" Do case insensitive matching
+"set smartcase		" Do smart case matching
+"set incsearch		" Incremental search
+"set autowrite		" Automatically save before commands like :next and :make
+"set hidden             " Hide buffers when they are abandoned
+"set mouse=a		" Enable mouse usage (all modes)
+
+
+" Source a global configuration file if available
+if filereadable("/etc/vim/vimrc.local")
+  source /etc/vim/vimrc.local
+endif
+
 syntax on
-
-" For plugins to load correctly
-filetype plugin indent on
-
-" TODO: Pick a leader key
-" let mapleader = ","
-
-" Security
-set modelines=0
-
-" Show line numbers
-set number
-
-" Show file stats
-set ruler
-
-
-" Encoding
-set encoding=utf-8
-
-" Whitespace
-set wrap
-set textwidth=79
-set formatoptions=tcqrn1
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
+set shiftwidth=4
+set softtabstop=4
+set cursorline
+set cursorcolumn
+set nu
+set hls
+set cindent
+set autoindent
 set expandtab
-set noshiftround
+"set noexpandtab
 
-" Cursor motion
-set scrolloff=3
-set backspace=indent,eol,start
-set matchpairs+=<:> " use % to jump between pairs
-runtime! macros/matchit.vim
+map ,* *<C-O>:%s///gn<CR>
+map <F2> :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+map <F3> :bprev<CR>
+map <F4> :bnext<CR>
+map <F5> :e<CR>
+map <F6> 1@q
+map <F7> :windo set invnumber<CR>
+map <F8> :if exists("g:syntax_on") <Bar>
+      \   syntax off <Bar>
+      \ else <Bar>
+      \   syntax enable <Bar>
+      \ endif <CR>
+map <F9> <leader>ac
+map <F10> vipga= 
+map <F12> oimport ipdb; ipdb.set_trace(context=30)<ESC>0w
+map <C-F7> :set listchars+=space:.<CR>:windo set invlist<CR>
 
-" Move up/down editor lines
-nnoremap j gj
-nnoremap k gk
 
-" Allow hidden buffers
-set hidden
+filetype indent on
+"highlight LineNr ctermfg=darkgrey
+colorscheme monokai 
 
-" Rendering
-set ttyfast
 
-" Status bar
-set laststatus=2
+"au BufNewFile,BufRead *.cpp setlocal ft=cpp14
+au BufNewFile,BufRead *.pde setlocal ft=arduino
+au BufNewFile,BufRead *.ino setlocal ft=arduino
+au BufNewFile,BufRead *.swift setlocal ft=swift
+let g:vim_arduino_map_keys = 0
+au BufNewFile,BufRead *.txt setlocal ft=conf
+au BufNewFile,BufRead *.launch set filetype=xml
+set cinoptions=l1
+set nowrap
 
-" Last line
-set showmode
-set showcmd
+set encoding=utf-8
+set fileencoding=utf-8
 
-" Searching
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
-set showmatch
-map <leader><space> :let @/=''<cr> " clear search
+" Highlight TODO and FIXME.
+augroup HiglightTODO
+  autocmd!
+  autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO\|FIXME\|DEBUG\|HACK\|HACK_BEGIN\|HACK_END\|HACK_NOTE', 10)
+augroup END
 
-" Remap help key.
-inoremap <F1> <ESC>:set invfullscreen<CR>a
-nnoremap <F1> :set invfullscreen<CR>
-vnoremap <F1> :set invfullscreen<CR>
+set synmaxcol=200
 
-" Textmate holdouts
-
-" Formatting
-map <leader>q gqip
-
-" Visualize tabs and newlines
-set listchars=tab:▸\ ,eol:¬
-" Uncomment this to enable by default:
-" set list " To enable by default
-" Or use your leader key + l to toggle on/off
-map <leader>l :set list!<CR> " Toggle tabs and EOL
-
-" Color scheme (terminal)
-set t_Co=256
-set background=dark
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-" put https://raw.github.com/altercation/vim-colors-solarized/master/colors/solarized.vim
-" in ~/.vim/colors/ and uncomment:
-" colorscheme solarized
+nnoremap <C-w>u :source ~/.vim_session<CR>
+nnoremap <C-w>s :mksession! ~/.vim_session<CR>

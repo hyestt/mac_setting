@@ -88,7 +88,7 @@ filetype indent on
 "highlight LineNr ctermfg=darkgrey
 "The color scheme is in ~/.vim/color folder 
 
-colorscheme monokai 
+"colorscheme monokai" 
 
 
 "au BufNewFile,BufRead *.cpp setlocal ft=cpp14
